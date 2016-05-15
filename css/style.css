@@ -4,6 +4,11 @@ body {
 	font-family: "Myraid Pro", Arial, sans-serif;
 }
 
+header, main, footer { max-width: 500px; margin: auto; padding: 20px 0;}
+
+header { text-align: center; }
+h1 { font-size: 25px; }
+p { margin: 10px 0;}
 
 #board { width: 300px; margin: auto; }
 

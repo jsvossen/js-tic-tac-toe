@@ -9,12 +9,16 @@ var tictactoe = {
 			if (grid.cellIsEmpty(this)) {
 				grid.markCell(this, thisGame.turn);
 				thisGame.turn = thisGame.nextPlayer();
+				thisGame.updateState();
 			}
 		});
 	},
 	nextPlayer: function() {
 		var nextI = (this.players.indexOf(this.turn) + 1) % this.players.length;
 		return this.players[nextI];
+	},
+	updateState: function() {
+		$('#gameState .player').text(this.turn);
 	}
 }
 
