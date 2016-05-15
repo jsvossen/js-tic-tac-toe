@@ -10,6 +10,8 @@ header { text-align: center; }
 h1 { font-size: 25px; }
 p { margin: 10px 0;}
 
+.game-over, .game-over a { color: red; }
+
 #board { width: 300px; margin: auto; }
 
 .cell {

@@ -5,8 +5,9 @@ var tictactoe = {
 		grid.render();
 		thisGame = this;
 		thisGame.turn = thisGame.players[0];
+		$('#gameState').html('Player <span class="player">'+thisGame.turn+'</span>\'s turn.');
 		$('.cell').click(function() {
-			if (grid.cellIsEmpty(this)) {
+			if ( grid.cellIsEmpty(this) && !thisGame.gameOver() ) {
 				grid.markCell(this, thisGame.turn);
 				thisGame.turn = thisGame.nextPlayer();
 				thisGame.updateState();
@@ -18,8 +19,23 @@ var tictactoe = {
 		return this.players[nextI];
 	},
 	updateState: function() {
-		$('#gameState .player').text(this.turn);
+		if ( this.gameOver() ) {
+			$('#gameState').addClass('game-over').html('Game over! <a href="#">play again</a>');
+			thisGame = this;
+			$('#gameState a').click(function(){
+				$('#board').empty();
+				thisGame.init();
+				$('#gameState').removeClass('game-over');
+				thisGame.updateState();
+			});
+		} else { 
+			$('#gameState .player').text(this.turn);
+		}
+	},
+	gameOver: function() {
+		return grid.isFull();
 	}
+
 }
 
 
@@ -55,5 +71,16 @@ var grid = {
 	markCell: function(cell,mark) {
 		$(cell).attr("data-mark", mark);
 		$(cell).html(mark);
+	},
+	isFull: function() {
+		thisGrid = this;
+		var full = true;
+		$('.cell').each(function(index) {
+			if ( thisGrid.cellIsEmpty(this) ) {
+				full = false;
+				return false;
+			}
+		});
+		return full;
 	}
 }
