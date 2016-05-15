@@ -1,1 +1,20 @@
 @import "reset.css";
+
+#board { width: 300px; margin: auto; }
+
+.cell {
+	-webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;   
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+.row:first-child .cell { border-bottom: 1px solid; }
+
+.row:last-child .cell { border-top: 1px solid; }
+
+.row .cell:first-child { border-right:  1px solid; }
+
+.row .cell:last-child { border-left: 1px solid; }
