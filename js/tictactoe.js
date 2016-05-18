@@ -19,8 +19,14 @@ var tictactoe = {
 		return this.players[nextI];
 	},
 	updateState: function() {
+		thisGame = this;
 		if ( this.gameOver() ) {
-			$('#gameState').addClass('game-over').html('Game over! <a href="#">play again</a>');
+			$('#gameState').addClass('game-over');
+			if (this.winner()) {
+				$('#gameState').html(thisGame.winner()+' wins! <a href="#">play again</a>');
+			} else {
+				$('#gameState').html('Game over! <a href="#">play again</a>');
+			}
 			thisGame = this;
 			$('#gameState a').click(function(){
 				$('#board').empty();
@@ -33,7 +39,39 @@ var tictactoe = {
 		}
 	},
 	gameOver: function() {
-		return grid.isFull();
+		return grid.isFull() || this.winner();
+	},
+	winner: function() {
+		var winner;
+		for (var x = 0; x < grid.width; x++) {
+			var col = grid.getCol(x);
+			if ( grid.cellsMatch(col) ) {
+				winner = $(col[0]).attr('data-mark');
+				break;
+			}
+		}
+		if (!winner) {
+			for (var y = 0; y < grid.width; y++) {
+				var row = grid.getRow(y);
+				if ( grid.cellsMatch(row) ) {
+					winner = $(row[0]).attr('data-mark');
+					break;
+				}
+			}
+		}
+		if (!winner) {
+			var diag = grid.getDiagDn();
+			if ( grid.cellsMatch(diag) ) {
+				winner = $(diag[0]).attr('data-mark');
+			}
+		}
+		if (!winner) {
+			var diag = grid.getDiagUp();
+			if ( grid.cellsMatch(diag) ) {
+				winner = $(diag[0]).attr('data-mark');
+			}
+		}
+		return winner;
 	}
 
 }
@@ -82,5 +120,31 @@ var grid = {
 			}
 		});
 		return full;
+	},
+	getRow: function(row) {
+		return $('.cell[data-coord$=-'+row+']');
+	},
+	getCol: function(col) {
+		return $('.cell[data-coord^='+col+'-]');
+	},
+	getDiagDn: function() {
+		var diag = [];
+		for (var i = 0, j = 0; i < this.width, j < this.height; i++, j++) {
+			diag.push($('.cell[data-coord='+i+'-'+i+']'));
+		}
+		return diag;
+	},
+	getDiagUp: function() {
+		var diag = [];
+		for (var i = 0, j = this.height-1; i < this.width, j>=0; i++, j--) {
+			diag.push($('.cell[data-coord='+i+'-'+j+']'));
+		}
+		return diag;
+	},
+	cellsMatch: function(cellSet) {
+		var thisGrid = this;
+		var mark = $(cellSet[0]).attr("data-mark");
+		set = $.grep( cellSet, function(cell){ return !thisGrid.cellIsEmpty(cell) && $(cell).attr("data-mark") == mark; });
+		return set.length == thisGrid.width;
 	}
 }
